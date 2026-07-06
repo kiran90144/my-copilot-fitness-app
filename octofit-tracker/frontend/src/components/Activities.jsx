@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { getApiBaseUrl } from '../lib/api';
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME;
+const API_BASE_URL = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev`
+  : 'http://localhost:8000';
 
 export default function Activities() {
   const [activities, setActivities] = useState([]);
@@ -8,9 +12,9 @@ export default function Activities() {
   useEffect(() => {
     async function loadActivities() {
       try {
-        const response = await fetch(`${getApiBaseUrl()}/api/activities/`);
+        const response = await fetch(`${API_BASE_URL}/api/activities`);
         const data = await response.json();
-        setActivities(Array.isArray(data) ? data : data.results || []);
+        setActivities(Array.isArray(data) ? data : data?.results ?? []);
       } catch (error) {
         console.error('Failed to load activities', error);
       } finally {
@@ -33,6 +37,7 @@ export default function Activities() {
               <strong>{activity.type}</strong> — {activity.durationMinutes} min
             </li>
           ))}
+          {activities.length === 0 && <li className="list-group-item text-muted">No activities found.</li>}
         </ul>
       </div>
     </div>

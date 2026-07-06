@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { getApiBaseUrl } from '../lib/api';
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME;
+const API_BASE_URL = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev`
+  : 'http://localhost:8000';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
@@ -8,9 +12,9 @@ export default function Users() {
   useEffect(() => {
     async function loadUsers() {
       try {
-        const response = await fetch(`${getApiBaseUrl()}/api/users/`);
+        const response = await fetch(`${API_BASE_URL}/api/users`);
         const data = await response.json();
-        setUsers(Array.isArray(data) ? data : data.results || []);
+        setUsers(Array.isArray(data) ? data : data?.results ?? []);
       } catch (error) {
         console.error('Failed to load users', error);
       } finally {
@@ -33,6 +37,7 @@ export default function Users() {
               <strong>{user.name}</strong> — {user.email}
             </li>
           ))}
+          {users.length === 0 && <li className="list-group-item text-muted">No users found.</li>}
         </ul>
       </div>
     </div>

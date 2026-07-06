@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { getApiBaseUrl } from '../lib/api';
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME;
+const API_BASE_URL = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev`
+  : 'http://localhost:8000';
 
 export default function Leaderboard() {
   const [entries, setEntries] = useState([]);
@@ -8,9 +12,9 @@ export default function Leaderboard() {
   useEffect(() => {
     async function loadLeaderboard() {
       try {
-        const response = await fetch(`${getApiBaseUrl()}/api/leaderboard/`);
+        const response = await fetch(`${API_BASE_URL}/api/leaderboard`);
         const data = await response.json();
-        setEntries(Array.isArray(data) ? data : data.results || []);
+        setEntries(Array.isArray(data) ? data : data?.results ?? []);
       } catch (error) {
         console.error('Failed to load leaderboard', error);
       } finally {
@@ -33,6 +37,7 @@ export default function Leaderboard() {
               <strong>{entry.userName}</strong> — {entry.score} pts
             </li>
           ))}
+          {entries.length === 0 && <li className="list-group-item text-muted">No leaderboard entries found.</li>}
         </ul>
       </div>
     </div>

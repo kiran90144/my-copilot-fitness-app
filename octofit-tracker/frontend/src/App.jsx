@@ -6,6 +6,11 @@ import Users from './components/Users';
 import Workouts from './components/Workouts';
 import './App.css';
 
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME;
+const API_BASE_URL = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev`
+  : 'http://localhost:8000';
+
 const navItems = [
   { to: '/', label: 'Users' },
   { to: '/teams', label: 'Teams' },
@@ -20,7 +25,9 @@ function App() {
       <header className="mb-4">
         <h1 className="display-5 fw-bold">OctoFit Tracker</h1>
         <p className="text-muted">A modern multi-tier fitness dashboard powered by React 19, Vite, and the Express API.</p>
-        <p className="small text-muted">Set VITE_CODESPACE_NAME in .env.local to use Codespaces URLs such as https://&lt;name&gt;-8000.app.github.dev/api/....</p>
+        <p className="small text-muted">
+          API base URL: <code>{API_BASE_URL}/api</code>
+        </p>
       </header>
 
       <nav className="nav nav-pills mb-4">

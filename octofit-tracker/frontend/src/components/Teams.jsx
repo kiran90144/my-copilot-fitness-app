@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
-import { getApiBaseUrl } from '../lib/api';
+
+const codespaceName = import.meta.env.VITE_CODESPACE_NAME;
+const API_BASE_URL = codespaceName
+  ? `https://${codespaceName}-8000.app.github.dev`
+  : 'http://localhost:8000';
 
 export default function Teams() {
   const [teams, setTeams] = useState([]);
@@ -8,9 +12,9 @@ export default function Teams() {
   useEffect(() => {
     async function loadTeams() {
       try {
-        const response = await fetch(`${getApiBaseUrl()}/api/teams/`);
+        const response = await fetch(`${API_BASE_URL}/api/teams`);
         const data = await response.json();
-        setTeams(Array.isArray(data) ? data : data.results || []);
+        setTeams(Array.isArray(data) ? data : data?.results ?? []);
       } catch (error) {
         console.error('Failed to load teams', error);
       } finally {
@@ -33,6 +37,7 @@ export default function Teams() {
               <strong>{team.name}</strong> — {team.sport}
             </li>
           ))}
+          {teams.length === 0 && <li className="list-group-item text-muted">No teams found.</li>}
         </ul>
       </div>
     </div>
