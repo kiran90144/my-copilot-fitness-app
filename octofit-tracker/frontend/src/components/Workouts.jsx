@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react';
 
-const API_BASE_URL = import.meta.env.VITE_CODESPACE_NAME
-  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev`
-  : 'http://localhost:8000';
-
 export default function Workouts() {
   const [workouts, setWorkouts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -11,7 +7,11 @@ export default function Workouts() {
   useEffect(() => {
     async function loadWorkouts() {
       try {
-        const response = await fetch(`${API_BASE_URL}/api/workouts`);
+        const response = await fetch(
+          import.meta.env.VITE_CODESPACE_NAME
+            ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/workouts`
+            : 'http://localhost:8000/api/workouts'
+        );
         const data = await response.json();
         setWorkouts(Array.isArray(data) ? data : data?.results ?? []);
       } catch (error) {
