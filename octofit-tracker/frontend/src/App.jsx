@@ -6,9 +6,8 @@ import Users from './components/Users';
 import Workouts from './components/Workouts';
 import './App.css';
 
-const codespaceName = import.meta.env.VITE_CODESPACE_NAME;
-const API_BASE_URL = codespaceName
-  ? `https://${codespaceName}-8000.app.github.dev`
+const API_BASE_URL = import.meta.env.VITE_CODESPACE_NAME
+  ? `https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev`
   : 'http://localhost:8000';
 
 const navItems = [
